@@ -25,12 +25,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 let socketsConnected = new Set();
 
-
 /**
  * Registra o handler responsável pelo ciclo de vida de cada conexão.
 */
 io.on('connection', onConnected);
-
 
 /**
  * Executada sempre que um cliente estabelece uma conexão WebSocket
@@ -44,7 +42,6 @@ function onConnected(socket) {
     */
     io.emit('clients-total', socketsConnected.size);
 
-
     /**
      * O evento disconnect é disparado automaticamente pelo Socket.IO
      * independentemente do motivo da desconexão
@@ -52,8 +49,12 @@ function onConnected(socket) {
     socket.on('disconnect', () => {
         console.log('Socket disconnected', socket.id);
         socketsConnected.delete(socket.id);
+        
         io.emit('clients-total', socketsConnected.size);
     });
+
+    socket.on('message', (data) => {
+        console.log(data);
+        socket.broadcast.emit('chat-message', data)
+    });
 }
-
-
