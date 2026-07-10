@@ -16,18 +16,39 @@ socket.on('clients-total', (data) => {
 });
 
 function sendMessage() {
+    if (messageInput.valeu === '') return;
     console.log(messageInput.value);
     const data = {
         name: nameInput.value,
         message: messageInput.value,
         dateTime: new Date()
     }
-    socket.emit('message', data)
+    socket.emit('message', data);
+    addMessageToUI(true, data);
+    messageInput.valeu = '';
 }
 
 socket.on('chat-message', (data) => {
-    console.log(data);
+    // console.log(data);
+    addMessageToUI(false, data);
 });
+
+function addMessageToUI(isOwnMessage, data) {
+    const element = `
+    <li class="${isOwnMessage ? "message-right" : "message-left"}">
+        <p class="message">
+            ${data.message}
+            <span>${data.name} • ${moment(data.dateTime).fromNow()}</span>
+        </p>
+    </li>
+    `
+    messageContainer.innerHTML += element;
+    scrollToBotton();
+}
+
+function scrollToBotton() {
+    messageContainer.scrollTo(0, messageContainer.scrollHeight);
+}
 
 
 
