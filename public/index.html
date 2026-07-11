@@ -3,48 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <meta name="description" content="AppChat - Chat em tempo real com WebSocket">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="style.css">
-    <title>Chat App</title>
+    <title>AppChat</title>
 </head>
 <body>
-    <h1 class="title">🗨️ AppChat</h1>
-    <div class="main">
-        <div class="name">
-            <span><i class="far fa-user"></i></span>
-            <input type="text" id="name-input" class="name-input" value="anonymous" maxlength="20">
+    <div class="app-wrapper">
+        <header class="app-header">
+            <h1 class="title">🗨️ AppChat</h1>
+            <p class="clients-total" id="client-total">Usuários: —</p>
+            <button id="mute-btn" class="mute-btn" title="Silenciar notificações" aria-label="Silenciar notificações">
+                <i class="fas fa-volume-high"></i>
+            </button>
+        </header>
+
+        <div class="main glass">
+            <div class="name-bar">
+                <i class="far fa-user name-icon"></i>
+                <input type="text" id="name-input" class="name-input" value="anonymous" maxlength="20" placeholder="Seu nome" readonly>
+                <button id="edit-name-btn" class="edit-name-btn" title="Editar nome" aria-label="Editar nome">
+                    <i class="fas fa-pen"></i>
+                </button>
+            </div>
+
+            <!-- Lista de mensagens -->
+            <ul class="message-container" id="message-container"></ul>
+
+            <!-- Formulário de envio -->
+            <form class="message-form" id="message-form">
+                <input type="text" name="message" id="message-input" class="message-input" placeholder="Digite uma mensagem...">
+                <div class="v-divider"></div>
+                <button type="submit" id="send-button" class="send-button" aria-label="Enviar mensagem">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
         </div>
-
-        <ul class="message-container" id="message-container">
-            <li class="message-left">
-                <p class="message">
-                    lorem impsun 01
-                    <span>bluebird - 26 july 10:40</span>
-                </p>
-            </li>
-
-            <li class="message-right">
-                <p class="message">
-                    lorem impsun 02
-                    <span>bluebird - 26 july 10:40</span>
-                </p>
-            </li>
-
-            <li class="message-feedback">
-                <p class="feedback" id="feedback">
-                    Vini está escrevendo
-                </p>
-            </li>
-        </ul>
-
-        <form class="message-form" id="message-form">
-            <input type="text" name="message" id="message-input" class="message-input">
-            <div class="v-divider"></div>
-
-            <button type="submit" class="send-button">send <span><i class="fas fa-paper-plane"></i></span></button>
-        </form>
     </div>
-    <h3 class="clients-total" id="client-total">Total de Usuários: </h3>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment-with-locales.min.js" integrity="sha512-4F1cxYdMiAW98oomSLaygEwmCnIP38pb4Kx70yQYqRwLVCs3DbRumfBq82T08g/4LJ/smbFGFpmeFlQgoDccgg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

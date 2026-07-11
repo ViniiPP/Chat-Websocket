@@ -22,6 +22,7 @@ const server = app.listen(PORT, () => console.log(`Server iniciou na porta ${POR
 const io = new Server(server)
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/src', express.static(path.join(__dirname, 'src')));
 
 let socketsConnected = new Set();
 
