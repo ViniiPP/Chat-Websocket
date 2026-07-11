@@ -1,7 +1,7 @@
 # Chat-Websocket
 
 Aplicacao de chat em tempo real baseada em WebSocket, construida com Socket.IO e Express
-Render: https://chat-websocket-rr3f.onrender.com/
+- Render: https://chat-websocket-rr3f.onrender.com/
 
 ## Stack
 
