@@ -1,7 +1,8 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { Server } from "socket.io"
+import { createServer } from 'http';
+import { Server } from 'socket.io';
 
 /**
  * ES Modules não disponibilizam __dirname e __filename
@@ -15,14 +16,26 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 /**
+ * Arquivos estáticos registrados ANTES de iniciar o servidor
+*/
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/src', express.static(path.join(__dirname, 'src')));
+
+/**
  * O servidor HTTP é compartilhado entre o Express e o Socket.IO
  * Isso permite servir a aplicação web e manter conexões WebSocket utilizando a mesma porta
 */
-const server = app.listen(PORT, () => console.log(`Server iniciou na porta ${PORT}`));
-const io = new Server(server)
+const server = createServer(app);
 
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/src', express.static(path.join(__dirname, 'src')));
+const io = new Server(server, {
+    cors: {
+        origin: '*',
+        methods: ['GET', 'POST']
+    },
+    transports: ['websocket', 'polling']
+});
+
+server.listen(PORT, () => console.log(`Server iniciou na porta ${PORT}`));
 
 let socketsConnected = new Set();
 
@@ -39,7 +52,7 @@ function onConnected(socket) {
     socketsConnected.add(socket.id);
 
     /**
-     * Publica o número atualizado de clientes para todos os os navegadores conectados
+     * Publica o número atualizado de clientes para todos os navegadores conectados
     */
     io.emit('clients-total', socketsConnected.size);
 
@@ -50,16 +63,15 @@ function onConnected(socket) {
     socket.on('disconnect', () => {
         console.log('Socket disconnected', socket.id);
         socketsConnected.delete(socket.id);
-        
         io.emit('clients-total', socketsConnected.size);
     });
 
     socket.on('message', (data) => {
         console.log(data);
-        socket.broadcast.emit('chat-message', data)
+        socket.broadcast.emit('chat-message', data);
     });
 
     socket.on('feedback', (data) => {
         socket.broadcast.emit('feedback', data);
     });
-}
+}
